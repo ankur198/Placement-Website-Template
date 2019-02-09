@@ -48,7 +48,10 @@
             <input id="search" type="text" placeholder="Search" oninput="searchCollege()" onchange="searchCollege()">
         </div>
         <br>
-        <div id='collegeList' class="containmner">
+        <div id='collegeList' class="container">
+
+            <div v-if="colleges.length==0"><b>Its lonely here ☹</b></div>
+
             <div class="card" v-for="college in colleges">
                 <div class="card-image">
                     <!-- <img v-bind:src="college.images[0]" alt="img"> -->
