@@ -12,11 +12,35 @@
 
 <body>
 
+    <div>
+        <form>
+            Name: <input type="text" name="name"> <br>
+            About <input type="text" name="about"> <br>
+            Price <input type="text" name="price"> <br>
+            Country <input type="text" name="country"> <br>
+            <input id="addClg" type="button" value="Add College" onclick="addCollege()">
+        </form>
+    </div>
+    <br>
+    <br>
+    <div id="collegeList">
+        <div v-for='college in colleges'>
+            Name: {{college.college}} <br>
+            About: {{college.about}} <br>
+            Price: {{college.price}} <br>
+            Country: {{college.country}} <br>
+            <hr>
+        </div>
+    </div>
+
+
     <script src="https://unpkg.com/@isomorphic-git/lightning-fs"></script>
     <script src="https://unpkg.com/browserfs"></script>
     <script src="https://isomorphic-git.org/js/pify.js"></script>
     <script src="https://unpkg.com/isomorphic-git"></script>
     <script src="script/adminG.js" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
 
 </body>
 

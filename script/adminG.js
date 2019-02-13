@@ -1,10 +1,10 @@
-window.fs = new LightningFS('fs', {
+window.fs = new LightningFS("fs", {
     wipe: true
-})
-git.plugins.set('fs', window.fs)
-window.pfs = pify(window.fs)
+});
+git.plugins.set("fs", window.fs);
+window.pfs = pify(window.fs);
 
-window.dir = '/tutorial'
+window.dir = "/tutorial";
 console.log(dir);
 
 async function init() {
@@ -14,9 +14,9 @@ async function init() {
 
     await git.clone({
         dir,
-        corsProxy: 'https://cors.isomorphic-git.org',
-        url: 'https://github.com/arrebcer1/IIY.git',
-        ref: 'master',
+        corsProxy: "https://cors.isomorphic-git.org",
+        url: "https://github.com/arrebcer1/IIY.git",
+        ref: "master",
         singleBranch: true,
         depth: 1
     });
@@ -33,40 +33,91 @@ function getContactsData() {
         .then(data => {
             console.log(data);
             xdata = data;
-            xdata.push({
-                "country": "asdf",
-                "college": "1234",
-                "about": 12345,
-                "price": 1234,
-            })
-        })
+        });
 }
 
-async function updateGit() {
+function removeCollege(college) {
+    xdata.pop(college);
+}
 
-    await pfs.writeFile(`${dir}/Data/colleges.json`, xdata, 'utf8')
-    await git.status({
-        dir,
-        filepath: 'Data/college.json'
-    })
+async function addCollege() {
+    let btn = document.getElementById('addClg');
+    btn.disabled = true;
 
-    let sha = await git.commit({
-        dir,
-        message: 'Delete package.json and overwrite README.',
-        author: {
-            name: 'Ankur Nigam',
-            email: 'ankur.nigam198@gmail.com'
-        }
-    })
+    let name = document.getElementsByName('name')[0].value
+    let about = document.getElementsByName('about')[0].value
+    let price = document.getElementsByName('price')[0].value
+    let country = document.getElementsByName('country')[0].value
 
-    sha
+    let college = {
+        college: name,
+        about,
+        price,
+        country
+    }
+    console.log(college);
+
+    _addCollege(college)
+    await commit();
+
+    btn.disabled = false;
+
+    alert("Added college")
+}
+
+function _addCollege(college) {
+    xdata.push(college);
 }
 
 async function commit() {
+    await pfs.writeFile(
+        `${dir}/Data/colleges.json`,
+        JSON.stringify(xdata),
+        "utf8"
+    );
+    await git.add({
+        dir,
+        filepath: "Data/colleges.json"
+    });
+    await git.status({
+        dir,
+        filepath: "Data/college.json"
+    });
+
+    let sha = await git.commit({
+        dir,
+        message: `Update data - ${new Date().toString()}`,
+        author: {
+            name: "gitu",
+            email: "Gitu1107@gmail.com"
+        }
+    });
+
+    sha;
+
+    await push();
+}
+
+async function push() {
     await git.push({
         dir: dir,
-        username: '4',
-        password: '4',
-
-    })
+        username: "Gituzz",
+        password: "123456789gitu@"
+    });
 }
+
+
+getContactsData();
+
+function displayCollege() {
+    new Vue({
+        el: '#collegeList',
+        data: {
+            colleges: xdata
+        }
+    });
+}
+setTimeout(async () => {
+    displayCollege()
+    await init();
+}, 2000);
